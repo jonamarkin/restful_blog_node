@@ -39,4 +39,8 @@ UserSchema.virtual("gravatar").get(function () {
   return `https://gravatar.com/avatar/${hash}?d=identicon`;
 });
 
-module.exports = mongoose.model("user", UserSchema);
+//Create model
+const User = mongoose.model("User", userSchema);
+
+//Export model
+module.exports = User;
