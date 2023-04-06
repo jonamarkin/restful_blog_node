@@ -2,8 +2,6 @@ const mongoose = require("mongoose");
 
 const md5 = require("md5");
 
-const Post = require("./Post/Post");
-
 const UserSchema = new mongoose.Schema(
   {
     firstName: {
