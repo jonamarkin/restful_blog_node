@@ -4,6 +4,9 @@ const globalErrorHandler = require("./middlewares/globalErrorHandler");
 require("dotenv").config();
 require("./config/db");
 
+//Import routes
+const authRouter = require("./routes/authRoutes");
+
 //Define global variables and constants
 const PORT = process.env.PORT || 3000;
 
@@ -14,7 +17,7 @@ const app = express();
 app.use(express.json({ extended: false }));
 
 //Define routes
-//app.use("/api/users", require("./routes/api/users"));
+app.use("/api/v1/auth", authRouter);
 
 //Start server
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));

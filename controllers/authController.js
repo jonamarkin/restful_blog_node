@@ -1,4 +1,4 @@
-const User = require("../models/User/User");
+const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const {
   generateToken,
@@ -12,7 +12,9 @@ const register = async (req, res, next) => {
   const { firstName, lastName, email, password } = req.body;
   try {
     //Check if user already exists
-    const userExists = User.findOne({ email });
+    const userExists = User.findOne({ email }).orFail(() => {
+      next(apiError("Error finding user", 500));
+    });
     if (userExists) {
       next(apiError("User already exists", 400));
     }
