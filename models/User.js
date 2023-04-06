@@ -1,5 +1,9 @@
 const mongoose = require("mongoose");
 
+const md5 = require("md5");
+
+const Post = require("./Post/Post");
+
 const UserSchema = new mongoose.Schema(
   {
     firstName: {
@@ -17,12 +21,12 @@ const UserSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, , "Please provide a password"],
+      required: [true, "Please provide a password"],
     },
     posts: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "post",
+        ref: "Post",
       },
     ],
   },
