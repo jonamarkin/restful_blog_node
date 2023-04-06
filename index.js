@@ -1,5 +1,6 @@
 //Import required modules
 const express = require("express");
+require("dotenv").config();
 require("./config/db");
 
 //Define global variables and constants
