@@ -1,0 +1,14 @@
+#Ignore env files
+.env
+
+#Ignore node_modules
+node_modules
+
+#Ignore .DS_Store
+.DS_Store
+
+#Ignore .vscode
+.vscode
+
+#Ignore .idea
+.idea
