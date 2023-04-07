@@ -3,6 +3,7 @@ const {
   getUserById,
   getAllUsers,
   updateUser,
+  updateProfile,
 } = require("../controllers/userController");
 const authMiddleware = require("../middlewares/authMiddleware");
 const userRouter = express.Router();
@@ -17,7 +18,7 @@ userRouter.get("/", authMiddleware, getAllUsers);
 userRouter.put("/update/:id", authMiddleware, updateUser);
 
 //Update user's own profile
-userRouter.put("/update", authMiddleware, updateUser);
+userRouter.put("/update", authMiddleware, updateProfile);
 
 //Export router
 module.exports = userRouter;

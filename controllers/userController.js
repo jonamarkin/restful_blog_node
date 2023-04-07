@@ -64,9 +64,56 @@ const getAllUsers = async (req, res, next) => {
   }
 };
 
-//Update user
+//Update random user
 const updateUser = async (req, res, next) => {
   const { id } = req.params;
+  const { firstName, lastName, email } = req.body;
+  try {
+    //Check if user exists
+    const userExists = await User.findById(id).exec();
+    if (userExists) {
+      //Check if email is already in use
+      const isEmailTaken = await User.findOne({ email }).exec();
+      if (isEmailTaken) {
+        return res.status(400).json({
+          responseCode: "01",
+          responseMessage: "Email already in use",
+        });
+      }
+
+      //Update user
+      const user = await User.findByIdAndUpdate(
+        id,
+        {
+          firstName,
+          lastName,
+          email,
+        },
+        { new: true }
+      ).exec();
+      return res.status(200).json({
+        responseCode: "00",
+        responseMessage: "User updated successfully",
+        responseData: user,
+      });
+    } else {
+      return res.status(404).json({
+        responseCode: "01",
+        responseMessage: "User not found",
+      });
+    }
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).json({
+      responseCode: "99",
+      responseMessage: "Internal server error",
+    });
+  }
+};
+
+//Update user's own profile
+const updateProfile = async (req, res, next) => {
+  const { id } = req.user;
   const { firstName, lastName, email } = req.body;
   try {
     //Check if user exists
@@ -76,6 +123,14 @@ const updateUser = async (req, res, next) => {
       const token = getTokenFromHeader(req);
       const decoded = verifyToken(token);
       if (decoded.id === id) {
+        //Check if email is already in use
+        const isEmailTaken = await User.findOne({ email }).exec();
+        if (isEmailTaken) {
+          return res.status(400).json({
+            responseCode: "01",
+            responseMessage: "Email already in use",
+          });
+        }
         //Update user
         const user = await User.findByIdAndUpdate(
           id,
@@ -117,4 +172,5 @@ module.exports = {
   getUserById,
   getAllUsers,
   updateUser,
+  updateProfile,
 };
