@@ -6,23 +6,25 @@ const {
   updatePost,
   deletePost,
 } = require("../controllers/postController");
+const isAuthorOfPost = require("../middlewares/isAuthorOfPost");
+const authMiddleware = require("../middlewares/authMiddleware");
 
 const postRouter = express.Router();
 
 //Get all posts
-postRouter.get("/", getAllPosts);
+postRouter.get("/", authMiddleware, getAllPosts);
 
 //Get post by id
-postRouter.get("/:id", getPostById);
+postRouter.get("/:id", authMiddleware, isAuthorOfPost, getPostById);
 
 //Create post
-postRouter.post("/create", createPost);
+postRouter.post("/create", authMiddleware, createPost);
 
 //Update post
-postRouter.put("/update:id", updatePost);
+postRouter.put("/update:id", authMiddleware, isAuthorOfPost, updatePost);
 
 //Delete post
-postRouter.delete("/delete/:id", deletePost);
+postRouter.delete("/delete/:id", authMiddleware, isAuthorOfPost, deletePost);
 
 //Export router
 module.exports = postRouter;
