@@ -15,7 +15,7 @@ const register = async (req, res, next) => {
   const { firstName, lastName, email, password } = req.body;
   try {
     //Check if user already exists
-    const userExists = await User.findOne({ email });
+    const userExists = await User.findOne({ email }).exec();
     console.log(userExists);
     if (userExists) {
       return res.status(400).json({
@@ -56,7 +56,7 @@ const login = async (req, res, next) => {
   const { email, password } = req.body;
   try {
     //Check if user exists
-    const userExists = await User.findOne({ email });
+    const userExists = await User.findOne({ email }).exec();
     if (userExists) {
       //Check if password is correct
       const isPasswordCorrect = await bcrypt.compare(

@@ -6,6 +6,7 @@ require("./config/db");
 
 //Import routes
 const authRouter = require("./routes/authRoutes");
+const userRouter = require("./routes/userRoutes");
 
 //Define global variables and constants
 const PORT = process.env.PORT || 3000;
@@ -21,6 +22,7 @@ app.use(express.json({ extended: false }));
 
 //Define routes
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/users", userRouter);
 
 //Error handler
 app.use(globalErrorHandler);

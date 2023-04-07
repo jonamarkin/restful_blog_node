@@ -1,7 +1,5 @@
 const { getTokenFromHeader, verifyToken } = require("../utils/jwtUtils");
-
-//Check if user is authenticated
-const authMiddleware = async (req, res, next) => {
+const isAuthorOfPost = async (req, res, next) => {
   try {
     const token = getTokenFromHeader(req);
     if (!token) {
@@ -17,8 +15,23 @@ const authMiddleware = async (req, res, next) => {
         responseMessage: "Unauthorized",
       });
     }
-    req.user = decoded.id;
-    next();
+    const { id } = req.params;
+    const post = await Post.findById(id).exec();
+    if (post) {
+      if (post.user.toString() === decoded.id) {
+        next();
+      } else {
+        return res.status(401).json({
+          responseCode: "01",
+          responseMessage: "Unauthorized",
+        });
+      }
+    } else {
+      return res.status(404).json({
+        responseCode: "01",
+        responseMessage: "Post not found",
+      });
+    }
   } catch (error) {
     return res.status(500).json({
       responseCode: "99",
@@ -27,4 +40,4 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
-module.exports = authMiddleware;
+module.exports = isAuthorOfPost;

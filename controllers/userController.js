@@ -15,7 +15,8 @@ const getUserById = async (req, res, next) => {
   const { id } = req.params;
   try {
     //Check if user exists
-    const userExists = await User.findById(id);
+    const userExists = await User.findById(id).exec();
+
     if (userExists) {
       return res.status(200).json({
         responseCode: "00",
@@ -40,10 +41,18 @@ const getUserById = async (req, res, next) => {
 //Get all users
 const getAllUsers = async (req, res, next) => {
   try {
-    const users = await User.find();
+    const users = await User.find().exec();
+    //Check if there are users
+    if (users.length === 0) {
+      return res.status(404).json({
+        responseCode: "01",
+        responseMessage: "No users found",
+      });
+    }
+
     return res.status(200).json({
       responseCode: "00",
-      responseMessage: "Users found",
+      responseMessage: "Users retrieved successfully",
       responseData: users,
     });
   } catch (error) {
@@ -61,7 +70,7 @@ const updateUser = async (req, res, next) => {
   const { firstName, lastName, email } = req.body;
   try {
     //Check if user exists
-    const userExists = await User.findById(id);
+    const userExists = await User.findById(id).exec();
     if (userExists) {
       //Check if user found is the same as the user in the token
       const token = getTokenFromHeader(req);
@@ -76,7 +85,7 @@ const updateUser = async (req, res, next) => {
             email,
           },
           { new: true }
-        );
+        ).exec();
         return res.status(200).json({
           responseCode: "00",
           responseMessage: "User updated successfully",
@@ -101,4 +110,11 @@ const updateUser = async (req, res, next) => {
       responseMessage: "Internal server error",
     });
   }
+};
+
+//Export functions
+module.exports = {
+  getUserById,
+  getAllUsers,
+  updateUser,
 };
