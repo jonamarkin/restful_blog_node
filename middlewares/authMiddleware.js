@@ -17,7 +17,8 @@ const authMiddleware = async (req, res, next) => {
         responseMessage: "Unauthorized",
       });
     }
-    req.user = decoded.id;
+    req.userId = decoded.id;
+    console.log(req.userId);
     next();
   } catch (error) {
     return res.status(500).json({

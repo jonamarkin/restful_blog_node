@@ -1,11 +1,12 @@
 const express = require("express");
+const authMiddleware = require("../middlewares/authMiddleware");
 const {
   getUserById,
   getAllUsers,
   updateUser,
   updateProfile,
 } = require("../controllers/userController");
-const authMiddleware = require("../middlewares/authMiddleware");
+
 const userRouter = express.Router();
 
 //Get user by id

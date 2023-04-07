@@ -113,16 +113,16 @@ const updateUser = async (req, res, next) => {
 
 //Update user's own profile
 const updateProfile = async (req, res, next) => {
-  const { id } = req.user;
+  const userId = req.userId;
   const { firstName, lastName, email } = req.body;
   try {
     //Check if user exists
-    const userExists = await User.findById(id).exec();
+    const userExists = await User.findById(userId).exec();
     if (userExists) {
       //Check if user found is the same as the user in the token
       const token = getTokenFromHeader(req);
       const decoded = verifyToken(token);
-      if (decoded.id === id) {
+      if (decoded.id === userId) {
         //Check if email is already in use
         const isEmailTaken = await User.findOne({ email }).exec();
         if (isEmailTaken) {
@@ -133,7 +133,7 @@ const updateProfile = async (req, res, next) => {
         }
         //Update user
         const user = await User.findByIdAndUpdate(
-          id,
+          userId,
           {
             firstName,
             lastName,
@@ -159,6 +159,7 @@ const updateProfile = async (req, res, next) => {
       });
     }
   } catch (error) {
+    console.log(error);
     logger.error(error);
     return res.status(500).json({
       responseCode: "99",
