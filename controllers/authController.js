@@ -5,18 +5,23 @@ const {
   getTokenFromHeader,
   verifyToken,
 } = require("../utils/jwtUtils");
-const apiError = require("../utils/apiError");
+const winston = require("winston");
+const logger = winston.createLogger({
+  transports: [new winston.transports.Console()],
+});
 
 //Register a new user
 const register = async (req, res, next) => {
   const { firstName, lastName, email, password } = req.body;
   try {
     //Check if user already exists
-    const userExists = User.findOne({ email }).orFail(() => {
-      next(apiError("Error finding user", 500));
-    });
+    const userExists = await User.findOne({ email });
+    console.log(userExists);
     if (userExists) {
-      next(apiError("User already exists", 400));
+      return res.status(400).json({
+        responseCode: "01",
+        responseMessage: "User already exists",
+      });
     }
 
     //Hash password
@@ -31,24 +36,18 @@ const register = async (req, res, next) => {
       password: hashedPassword,
     });
 
-    //Generate token
-    const token = generateToken(user._id);
-
     //Send response
-    res.status(201).json({
+    return res.status(201).json({
       responseCode: "00",
       responseMessage: "User created successfully",
-      responseData: {
-        token,
-        user: {
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email,
-        },
-      },
+      responseData: user,
     });
   } catch (error) {
-    next(apiError(error.message, error.statusCode));
+    console.log(error);
+    return res.status(500).json({
+      responseCode: "99",
+      responseMessage: "Internal server error",
+    });
   }
 };
 
@@ -58,10 +57,45 @@ const login = async (req, res, next) => {
   try {
     //Check if user exists
     const userExists = await User.findOne({ email });
-    if (!userExists) {
-      next(apiError("User does not exist", 400));
+    if (userExists) {
+      //Check if password is correct
+      const isPasswordCorrect = await bcrypt.compare(
+        password,
+        userExists.password
+      );
+      if (isPasswordCorrect) {
+        //Generate token
+        const token = generateToken(userExists._id);
+        //Send response
+        return res.status(200).json({
+          responseCode: "00",
+          responseMessage: "Login successful",
+          responseData: {
+            token,
+            user: userExists,
+          },
+        });
+      } else {
+        logger.error("Incorrect password");
+        return res.status(400).json({
+          responseCode: "01",
+          responseMessage: "Invalid credentials",
+        });
+      }
+    } else {
+      logger.error("User does not exist");
+      return res.status(400).json({
+        responseCode: "01",
+        responseMessage: "User does not exist",
+      });
     }
-  } catch (error) {}
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).json({
+      responseCode: "99",
+      responseMessage: "Internal server error",
+    });
+  }
 };
 
 //Export controller
