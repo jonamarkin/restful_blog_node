@@ -2,21 +2,26 @@
 const express = require("express");
 const globalErrorHandler = require("./middlewares/globalErrorHandler");
 require("dotenv").config();
-require("./config/db");
+const { connectDb } = require("./config/db");
+
+//Define global variables and constants
+const PORT = process.env.PORT || 3000;
+
+//Connect to database
+connectDb();
 
 //Import routes
 const authRouter = require("./routes/authRoutes");
 const userRouter = require("./routes/userRoutes");
 const postRouter = require("./routes/postRoutes");
 
-//Define global variables and constants
-const PORT = process.env.PORT || 3000;
-
 //Create express app
 const app = express();
 
 //Start server
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+const appServer = app.listen(PORT, () =>
+  console.log(`Server started on port ${PORT}`)
+);
 
 //Use middleware
 app.use(express.json({ extended: false }));
@@ -36,3 +41,6 @@ app.use("*", (req, res) => {
     responseMessage: `${req.originalUrl} not found`,
   });
 });
+
+//Export app
+module.exports = { appServer, app };

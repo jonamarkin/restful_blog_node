@@ -40,7 +40,9 @@ const register = async (req, res, next) => {
     return res.status(201).json({
       responseCode: "00",
       responseMessage: "User created successfully",
-      responseData: user,
+      responseData: {
+        user,
+      },
     });
   } catch (error) {
     console.log(error);
