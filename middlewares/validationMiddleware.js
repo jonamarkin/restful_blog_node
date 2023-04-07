@@ -23,9 +23,9 @@ const createPostValidations = [
   body("title")
     .isLength({ min: 5, max: 50 })
     .withMessage("Title must be between 5 and 50 characters."),
-  body("content")
+  body("body")
     .isLength({ min: 10 })
-    .withMessage("Content must be at least 10 characters."),
+    .withMessage("Body must be at least 10 characters."),
 ];
 
 const registerUserValidations = [

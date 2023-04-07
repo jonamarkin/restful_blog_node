@@ -8,6 +8,10 @@ const {
 } = require("../controllers/postController");
 const isAuthorOfPost = require("../middlewares/isAuthorOfPost");
 const authMiddleware = require("../middlewares/authMiddleware");
+const {
+  validateInput,
+  createPostValidations,
+} = require("../middlewares/validationMiddleware");
 
 const postRouter = express.Router();
 
@@ -18,7 +22,12 @@ postRouter.get("/", authMiddleware, getAllPosts);
 postRouter.get("/:id", authMiddleware, isAuthorOfPost, getPostById);
 
 //Create post
-postRouter.post("/create", authMiddleware, createPost);
+postRouter.post(
+  "/create",
+  authMiddleware,
+  validateInput(createPostValidations),
+  createPost
+);
 
 //Update post
 postRouter.put("/update:id", authMiddleware, isAuthorOfPost, updatePost);

@@ -1,4 +1,5 @@
 const { getTokenFromHeader, verifyToken } = require("../utils/jwtUtils");
+const Post = require("../models/Post");
 const isAuthorOfPost = async (req, res, next) => {
   try {
     const token = getTokenFromHeader(req);
@@ -18,7 +19,7 @@ const isAuthorOfPost = async (req, res, next) => {
     const { id } = req.params;
     const post = await Post.findById(id).exec();
     if (post) {
-      if (post.user.toString() === decoded.id) {
+      if (post.author.toString() === decoded.id) {
         next();
       } else {
         return res.status(401).json({

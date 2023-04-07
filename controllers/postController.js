@@ -37,7 +37,7 @@ const getPostById = async (req, res) => {
     if (postExists) {
       return res.status(200).json({
         responseCode: "00",
-        responseMessage: "Post found",
+        responseMessage: "Post retrieved successfully",
         responseData: postExists,
       });
     } else {
