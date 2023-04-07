@@ -1,10 +1,10 @@
 //Import required modules for testing
 const request = require("supertest");
-const mongoose = require("mongoose");
 const User = require("../models/User");
 const { connectDb, closeDB } = require("../config/db");
 const { default: expect } = require("expect");
 const { app, appServer } = require("../index");
+require("dotenv").config();
 
 describe("Auth Routes", () => {
   beforeAll(async () => {
@@ -40,6 +40,7 @@ describe("Auth Routes", () => {
         email: "jonamarkin@gmail.com",
         password: "12345678",
       });
+
       expect(res.statusCode).toEqual(200);
       expect(res.body).toHaveProperty("responseData");
       expect(res.body.responseData).toHaveProperty("token");
