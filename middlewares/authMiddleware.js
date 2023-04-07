@@ -18,7 +18,7 @@ const authMiddleware = async (req, res, next) => {
       });
     }
     req.userId = decoded.id;
-    console.log(req.userId);
+
     next();
   } catch (error) {
     return res.status(500).json({

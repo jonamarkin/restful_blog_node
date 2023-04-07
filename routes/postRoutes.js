@@ -30,7 +30,7 @@ postRouter.post(
 );
 
 //Update post
-postRouter.put("/update:id", authMiddleware, isAuthorOfPost, updatePost);
+postRouter.put("/update/:id", authMiddleware, isAuthorOfPost, updatePost);
 
 //Delete post
 postRouter.delete("/delete/:id", authMiddleware, isAuthorOfPost, deletePost);

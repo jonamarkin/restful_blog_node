@@ -34,6 +34,7 @@ const isAuthorOfPost = async (req, res, next) => {
       });
     }
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       responseCode: "99",
       responseMessage: "Internal server error",
