@@ -40,6 +40,10 @@ Please `localhost:3000` used in the documentation with `https://blogapi-3ef3.onr
 - `PUT /api/v1/posts/update/:id` - Update a post by ID
 - `DELETE /api/v1/posts/delete/:id` - Delete a post by ID
 
+## Testing
+
+Tests cana be run with `npm test`
+
 ## Contributing
 
 Contributions are welcome! To contribute, follow these steps:
