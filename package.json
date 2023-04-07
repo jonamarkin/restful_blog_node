@@ -32,5 +32,8 @@
         "coveragePathIgnorePatterns": [
             "/node_modules/"
         ]
+    },
+    "engines": {
+        "node": ">=18.15.0"
     }
 }
